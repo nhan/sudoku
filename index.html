@@ -9,19 +9,44 @@
 <body>
   <script type="text/x-handlebars" data-template-name="application">
     <h2>Sudoku Helper</h2>
+    <p>
+      A constraint-propagation-based sudoku solver based on ideas from
+      <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">Section 3.3.5</a>
+      of SICP.  Written using CoffeeScript and Ember.js.  Source code available
+      on <a href="">GitHub</a>.
+    </p>
+    <ul>
+      <li> Click or use the arrow keys to select a cell. </li>
+      <li> Enter values 1 through 9 using the number keys or numpad. </li>
+      <li> Use backspace or delete to clear a value.</li>
+      <li>
+        <span class="conflict">Conflicting values</span>
+        cannot be entered</li>
+      <li>
+        <span class="computed">System derived values</span>
+        cannot be cleared directly.  These values ared automatically
+        cleared when you clear the input that allowed them to be deduced.
+      </li>
+    </ul>
     {{outlet}}
   </script>
   <script type="text/x-handlebars" data-template-name="index">
     <div class="sudoku_board">
-      {{#each row in model.cells}}
-        {{#each cell in row}}
-          {{view Sudoku.CellView cellBinding="cell"}}
-        {{/each}}
-        <div class="clear_left"></div>
+      {{#each row in model.blocks}}
+          {{#each block in row}}
+            <div class="sudoku_block">
+              {{#each blockRow in block}}
+                {{#each cell in blockRow}}
+                  {{view Sudoku.CellView cellBinding="cell"}}
+                {{/each}}
+                <div class="clear_left"></div>
+              {{/each}}
+            </div>
+          {{/each}}
+          <div class="clear_left"></div>
       {{/each}}
     </div>
   </script>
-
   <script type="text/x-handlebars" data-template-name="sudoku_cell">
     <div class="possible_values">
       {{view.possibleValues}}
@@ -30,11 +55,10 @@
       {{view.value}}
     </div>
   </script>
-
   <script src="js/lib/jquery-1.9.1.js"></script>
   <script src="js/lib/handlebars-1.0.0-rc.3.js"></script>
   <script src="js/lib/ember-1.0.0-rc.3.js"></script>
-  <!-- script src="js/libs/coffee-script.js"></script -->
-  <script src="js/sudoku.js"></script>
+  <script src="js/lib/coffee-script.js"></script>
+  <script src="js/sudoku.coffee" type="text/coffeescript"></script>
 </body>
 </html>

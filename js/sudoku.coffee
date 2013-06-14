@@ -1,8 +1,5 @@
 window.Sudoku = Sudoku = Ember.Application.create()
 Sudoku.allValues = -> [1,2,3,4,5,6,7,8,9]
-Sudoku.arrayEquals = (a, b) -> not (a < b or b < a)
-Sudoku.log = (message) ->
-  console.log message
 
 Sudoku.AllValuesMustAppearConstraint = Ember.Object.extend
   init: ->
@@ -85,23 +82,26 @@ Sudoku.Cell = Ember.Object.extend
     Ember.run.next =>
       @notifyMoreInformation informant
 
-  toString: -> "cell[#{@get 'x'}, #{@get 'y'}]"
-
 Sudoku.Board = Ember.Object.extend
   init: ->
     for x in [0...9]
       for y in [0...9]
         Sudoku.CannotHaveSameValueConstraint.create
           constrainedCell: @cellAt(x, y)
-          relatedCells: @blockAt(x, y).addObjects(@rowAt(x, y))
+          relatedCells: @flatten(@blockAt x, y).addObjects(@rowAt(x, y))
             .addObjects(@columnAt(x, y)).without(@cellAt(x, y))
 
     @get('rows').forEach (row) ->
-      Sudoku.AllValuesMustAppearConstraint.create {cells: row}
+      Sudoku.AllValuesMustAppearConstraint.create
+        cells: row
+
     @get('columns').forEach (column) ->
-      Sudoku.AllValuesMustAppearConstraint.create {cells: column}
-    @get('blocks').forEach (block) ->
-      Sudoku.AllValuesMustAppearConstraint.create {cells: block}
+      Sudoku.AllValuesMustAppearConstraint.create
+        cells: column
+
+    @flatten(@get 'blocks').forEach (block) =>
+      Sudoku.AllValuesMustAppearConstraint.create
+        cells: @flatten(block)
 
   cells: Ember.computed ->
      for x in [0...9]
@@ -111,19 +111,18 @@ Sudoku.Board = Ember.Object.extend
   cellAt: (x, y) ->
     @get('cells')[x][y]
 
+  flatten: (block) ->
+    block.reduce ((a, b) -> a.addObjects b), []
+
   blocks: Ember.computed ->
-    ret = []
     for x in [0...9] by 3
       for y in [0...9] by 3
-        ret.push @blockAt(x, y)
-    ret
+         @blockAt(x, y)
 
   blockAt: (x, y) ->
-    ret = []
     for i in [0...3]
       for j in [0...3]
-        ret.push @cellAt((x-(x%3))+i, (y-(y%3))+j)
-    ret
+        @cellAt((x-(x%3))+i, (y-(y%3))+j)
 
   columns: Ember.computed -> @columnAt(0, y) for y in [0...9]
 
