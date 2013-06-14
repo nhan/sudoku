@@ -1,0 +1,64 @@
+/* Put your CSS here */
+html, body {
+    margin: 20px;
+}
+
+.clear_left {
+  clear: left;
+  width: 0px;
+}
+
+.sudoku_board {
+  border-right: 1px solid #a0a0a0;
+  border-bottom: 1px solid #a0a0a0;
+  width: 720px;
+}
+
+.sudoku_block {
+  border-right: 1px solid #a0a0a0;
+  border-bottom: 1px solid #a0a0a0;
+  width: 720px;
+}
+
+.sudoku_cell {
+  border-top: 1px solid #a0a0a0;
+  border-left: 1px solid #a0a0a0;
+  width: 79px;
+  height: 79px;
+  float: left;
+  position: relative;
+}
+
+.sudoku_cell:focus {
+  background-color: #dadaff;
+  outline: 0;
+}
+
+.possible_values {
+  position: absolute;
+  top: 0px;
+  left 0px;
+  width: 79px;
+  height: 79px;
+  color: rgba(24, 32, 100, 0.30);
+}
+
+.cell_value {
+  position: absolute;
+  top: 0px;
+  left 0px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  width: 79px;
+  height: 59px;
+  text-align: center;
+  font-size: 60px;
+}
+
+.conflict {
+  color: red;
+}
+
+.computed {
+  color: green;
+}

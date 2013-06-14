@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sudoku Helper</title>
+  <link rel="stylesheet" href="css/lib/normalize.css">
+  <link rel="stylesheet" href="css/sudoku.css">
+</head>
+<body>
+  <script type="text/x-handlebars" data-template-name="application">
+    <h2>Sudoku Helper</h2>
+    {{outlet}}
+  </script>
+  <script type="text/x-handlebars" data-template-name="index">
+    <div class="sudoku_board">
+      {{#each row in model.cells}}
+        {{#each cell in row}}
+          {{view Sudoku.CellView cellBinding="cell"}}
+        {{/each}}
+        <div class="clear_left"></div>
+      {{/each}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="sudoku_cell">
+    <div class="possible_values">
+      {{view.possibleValues}}
+    </div>
+    <div class="cell_value">
+      {{view.value}}
+    </div>
+  </script>
+
+  <script src="js/lib/jquery-1.9.1.js"></script>
+  <script src="js/lib/handlebars-1.0.0-rc.3.js"></script>
+  <script src="js/lib/ember-1.0.0-rc.3.js"></script>
+  <!-- script src="js/libs/coffee-script.js"></script -->
+  <script src="js/sudoku.js"></script>
+</body>
+</html>
