@@ -43,7 +43,7 @@ Sudoku.Cell = Ember.Object.extend
   possibleValues: Ember.computed -> Sudoku.allValues()
 
   setValue: (value, informant) ->
-    unless value is @get 'value'
+    if value isnt @get('value') and @get('possibleValues').contains(value)
       @set 'value', value
       @set 'valueInformant', informant
       @set 'possibleValues', [value]
@@ -94,11 +94,9 @@ Sudoku.Board = Ember.Object.extend
     @get('rows').forEach (row) ->
       Sudoku.AllValuesMustAppearConstraint.create
         cells: row
-
     @get('columns').forEach (column) ->
       Sudoku.AllValuesMustAppearConstraint.create
         cells: column
-
     @flatten(@get 'blocks').forEach (block) =>
       Sudoku.AllValuesMustAppearConstraint.create
         cells: @flatten(block)
@@ -125,11 +123,9 @@ Sudoku.Board = Ember.Object.extend
         @cellAt((x-(x%3))+i, (y-(y%3))+j)
 
   columns: Ember.computed -> @columnAt(0, y) for y in [0...9]
-
   columnAt: (x, y) -> @cellAt(row, y) for row in [0...9]
 
   rows: Ember.computed -> @rowAt(x, 0) for x in [0...9]
-
   rowAt: (x, y) -> @cellAt(x, column) for column in [0...9]
 
 Sudoku.IndexRoute = Ember.Route.extend
@@ -138,7 +134,7 @@ Sudoku.IndexRoute = Ember.Route.extend
 
 Sudoku.CellView = Ember.View.extend
   classNames: ['sudoku_cell']
-  classNameBindings: ['valueType', 'classId']
+  classNameBindings: ['valueType', 'classId', 'noPossibleValues:impossible:']
   templateName: 'sudoku_cell'
   attributeBindings: ['tabindex']
   tabindex: 0
@@ -161,6 +157,10 @@ Sudoku.CellView = Ember.View.extend
     else if @get('cell.value') and @get('cell.valueInformant') isnt 'user'
       'computed'
   .property 'cell.value', 'cell.valueInformant', 'conflictingValue'
+
+  noPossibleValues: Ember.computed ->
+    @get('cell.possibleValues').length is 0
+  .property 'cell.possibleValues'
 
   value: Ember.computed ->
     conflictingValue = @get 'conflictingValue'

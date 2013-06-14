@@ -10,7 +10,7 @@
   <script type="text/x-handlebars" data-template-name="application">
     <h2>Sudoku Helper</h2>
     <p>
-      A constraint-propagation-based sudoku solver based on ideas from
+      A constraint-propagation-based sudoku solver using on ideas from
       <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">Section 3.3.5</a>
       of SICP.  Written using CoffeeScript and Ember.js.  Source code available
       on <a href="">GitHub</a>.
@@ -21,11 +21,16 @@
       <li> Use backspace or delete to clear a value.</li>
       <li>
         <span class="conflict">Conflicting values</span>
-        cannot be entered</li>
+        cannot be entered.</li>
       <li>
         <span class="computed">System derived values</span>
-        cannot be cleared directly.  These values ared automatically
+        cannot be cleared directly.  These values are automatically
         cleared when you clear the input that allowed them to be deduced.
+      </li>
+      <li>
+        If a cell displays no possible values, this means you have input an
+        invalid board and the system has derived a contradiction.  Try clearing
+        some cells.
       </li>
     </ul>
     {{outlet}}
